@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2b1d12">
+  <title>The Scriptorium — A Pomodoro of the Realm</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div class="crest" aria-hidden="true">
+        <svg viewBox="0 0 64 76" role="img">
+          <path d="M32 2 L60 10 V38 C60 56 47 68 32 74 C17 68 4 56 4 38 V10 Z"
+                fill="#7a1f2b" stroke="#c9a227" stroke-width="3"/>
+          <path d="M20 20 H44 M20 56 H44 M22 20 C22 32 42 44 42 56 M42 20 C42 32 22 44 22 56"
+                fill="none" stroke="#f2e3c2" stroke-width="3" stroke-linecap="round"/>
+          <path d="M26 26 H38 L32 38 Z" fill="#c9a227"/>
+          <path d="M26 50 H38 L32 40 Z" fill="#c9a227"/>
+        </svg>
+      </div>
+      <div class="masthead-text">
+        <p class="eyebrow">By appointment to the Crown</p>
+        <h1>The Scriptorium</h1>
+        <p class="tagline">A Pomodoro of the Realm <span aria-hidden="true">·</span> Keep vigil, scribe.</p>
+      </div>
+    </header>
+
+    <main class="scriptorium">
+      <section class="timer-card" aria-label="Pomodoro timer">
+        <div class="mode-tabs" role="tablist" aria-label="Kind of vigil">
+          <button class="mode-tab" role="tab" data-mode="focus" aria-selected="true">
+            <span class="tab-glyph" aria-hidden="true">✒</span> Study
+          </button>
+          <button class="mode-tab" role="tab" data-mode="short" aria-selected="false">
+            <span class="tab-glyph" aria-hidden="true">☕</span> Rest
+          </button>
+          <button class="mode-tab" role="tab" data-mode="long" aria-selected="false">
+            <span class="tab-glyph" aria-hidden="true">🍗</span> Feast
+          </button>
+        </div>
+
+        <div class="dial">
+          <svg class="dial-ring" viewBox="0 0 240 240" aria-hidden="true">
+            <circle class="ring-track" cx="120" cy="120" r="104"></circle>
+            <circle class="ring-progress" id="ringProgress" cx="120" cy="120" r="104"></circle>
+          </svg>
+          <div class="dial-center">
+            <p class="dial-mode" id="modeLabel">Study</p>
+            <p class="dial-time" id="timeDisplay" role="timer" aria-live="off">25:00</p>
+            <p class="dial-sub" id="dialSub">of 25 minutes</p>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="btn btn-primary" id="startBtn">Begin the Vigil</button>
+          <button class="btn" id="resetBtn">Reset</button>
+          <button class="btn" id="skipBtn">Skip</button>
+        </div>
+
+        <div class="seals-block">
+          <p class="seals-label">Seals until the Feast</p>
+          <div class="seals" id="seals" aria-label="Progress toward the long break"></div>
+        </div>
+
+        <p class="hint">Press <kbd>Space</kbd> to begin or pause <span aria-hidden="true">·</span> <kbd>R</kbd> to reset</p>
+      </section>
+
+      <aside class="decrees" aria-labelledby="decreesHeading">
+        <h2 id="decreesHeading">Royal Decrees</h2>
+        <p class="decrees-intro">Amend the length of each vigil. The scribe obeys at once.</p>
+
+        <form id="settingsForm" novalidate>
+          <div class="field">
+            <label for="focusMinutes">Study <span class="field-note">(focus)</span></label>
+            <div class="stepper">
+              <button type="button" class="step" data-target="focusMinutes" data-delta="-1" aria-label="Decrease study minutes">−</button>
+              <input id="focusMinutes" name="focusMinutes" type="number" min="1" max="180" step="1" inputmode="numeric">
+              <span class="unit">min</span>
+              <button type="button" class="step" data-target="focusMinutes" data-delta="1" aria-label="Increase study minutes">+</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="shortBreakMinutes">Rest <span class="field-note">(short break)</span></label>
+            <div class="stepper">
+              <button type="button" class="step" data-target="shortBreakMinutes" data-delta="-1" aria-label="Decrease rest minutes">−</button>
+              <input id="shortBreakMinutes" name="shortBreakMinutes" type="number" min="1" max="60" step="1" inputmode="numeric">
+              <span class="unit">min</span>
+              <button type="button" class="step" data-target="shortBreakMinutes" data-delta="1" aria-label="Increase rest minutes">+</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="longBreakMinutes">Feast <span class="field-note">(long break)</span></label>
+            <div class="stepper">
+              <button type="button" class="step" data-target="longBreakMinutes" data-delta="-1" aria-label="Decrease feast minutes">−</button>
+              <input id="longBreakMinutes" name="longBreakMinutes" type="number" min="1" max="90" step="1" inputmode="numeric">
+              <span class="unit">min</span>
+              <button type="button" class="step" data-target="longBreakMinutes" data-delta="1" aria-label="Increase feast minutes">+</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="longBreakEvery">Seals before each Feast</label>
+            <div class="stepper">
+              <button type="button" class="step" data-target="longBreakEvery" data-delta="-1" aria-label="Decrease seals">−</button>
+              <input id="longBreakEvery" name="longBreakEvery" type="number" min="2" max="12" step="1" inputmode="numeric">
+              <span class="unit">seals</span>
+              <button type="button" class="step" data-target="longBreakEvery" data-delta="1" aria-label="Increase seals">+</button>
+            </div>
+          </div>
+
+          <fieldset class="toggles">
+            <legend>Customs</legend>
+            <label class="toggle">
+              <input type="checkbox" id="autoStartBreaks" name="autoStartBreaks">
+              <span>Begin rests without bidding</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="autoStartFocus" name="autoStartFocus">
+              <span>Begin studies without bidding</span>
+            </label>
+            <label class="toggle">
+              <input type="checkbox" id="sound" name="sound">
+              <span>Ring the chapel bell</span>
+            </label>
+          </fieldset>
+
+          <div class="decrees-actions">
+            <button type="submit" class="btn btn-primary" id="saveBtn">Seal the Decrees</button>
+            <button type="button" class="btn btn-quiet" id="defaultsBtn">Restore Old Ways</button>
+          </div>
+          <p class="form-status" id="settingsStatus" role="status" aria-live="polite"></p>
+        </form>
+      </aside>
+    </main>
+
+    <section class="ledger" aria-labelledby="ledgerHeading">
+      <div class="ledger-head">
+        <h2 id="ledgerHeading">The Ledger of Vigils</h2>
+        <button class="btn btn-quiet" id="clearLedgerBtn">Burn the Ledger</button>
+      </div>
+      <ul class="ledger-list" id="ledgerList">
+        <li class="ledger-empty">No vigils recorded yet. The parchment awaits.</li>
+      </ul>
+    </section>
+
+    <footer class="colophon">
+      <p>Forged in the year of our Lord MMXXVI <span aria-hidden="true">·</span> No candles were harmed.</p>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
