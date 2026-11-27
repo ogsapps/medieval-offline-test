@@ -1,0 +1,15 @@
+{
+  "name": "the-scriptorium-pomodoro",
+  "version": "1.0.0",
+  "description": "The Scriptorium — a medieval-themed Pomodoro timer with user-adjustable timers",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "NODE_USE_ENV_PROXY=0 node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "private": true
+}
